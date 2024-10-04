@@ -1,8 +1,9 @@
 // Bot file
 const commandProperties = ["data", "execute"];
-const { token, clientId, guildId }  = require('./config.json');
+const { token, clientId, guildId, commandFolders }  = require('./config-example.json');
 
-async function start() {
+export async function start(cmdProperties = []) {
+    for (const properties of cmdProperties) { if (!contains(commandProperties, properties)) { commandProperties.push(properties); } }
     client.login(token).catch(err => logError(err));
     reload();
 }
@@ -59,7 +60,6 @@ const { REST, Routes, Client, Collection, Events, GatewayIntentBits, EmbedBuilde
 // client
 const rest = new REST().setToken(token);
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const foldersPath = path.join(__dirname, 'commands');
 client.commands = new Collection();
 
 client.once(Events.ClientReady, readyClient => { logInfo(`Discord bot is ready! Logged in as ${readyClient.user.tag}`); });
@@ -119,26 +119,29 @@ function registerCommands() {
     client.commands.clear();
     const commands = [];
 
-    const commandFiles = fs.readdirSync(foldersPath).filter(file => file.endsWith('.js'));
-    for (const file of commandFiles) {
-        const filePath = path.join(foldersPath, file);
-        const command = require(filePath);
+    const folders = ["./commands"];
+    for (const folder of commandFolders) { folders.push(folder); }
+    for (const folder of folders) {
+        const commandFiles = fs.readdirSync(folder).filter(file => file.endsWith('.js'));
+        for (const file of commandFiles) {
+            const filePath = path.join(foldersPath, file);
+            const command = require(filePath);
 
-        // Check if command has all the needed properties
-        let failed = false;
-        for (let i = 0; i < commandProperties.length; i++) {
-            if (!(commandProperties[i] in command)) {
-                logWarning(`${filePath} is missing "${commandProperties[i]}" property.`);
-                failed = true;
+            // Check if command has all the needed properties
+            let failed = false;
+            for (let i = 0; i < commandProperties.length; i++) {
+                if (!(commandProperties[i] in command)) {
+                    logWarning(`${filePath} is missing "${commandProperties[i]}" property.`);
+                    failed = true;
+                }
             }
+            if (failed) { continue; } // Skip
+
+            // Set a new item in the Collection with the key as the command name and the value as the exported module
+            client.commands.set(command.data.name, command);
+            commands.push(command.data.toJSON());
         }
-        if (failed) { continue; } // Skip
-
-        // Set a new item in the Collection with the key as the command name and the value as the exported module
-        client.commands.set(command.data.name, command);
-        commands.push(command.data.toJSON());
     }
-
     uploadDiscordCommands(commands).catch(err => logError(err));
 }
 
@@ -170,8 +173,11 @@ function logInfo(info)   { console.log  (`[${getTimeString()}] Info:\t` , info);
 function logData(data)   { console.log  (data); }
 async function sleep(seconds) { return new Promise(resolve => setTimeout(resolve, Math.max(seconds, 0) * 1000)); }
 
-/////////////
-// Run bot //
-/////////////
+function equals(first, second) {
+    switch (first) {
+        case second: return true;
+        default: return false;
+    }
+}
 
-start().catch(err => logError(err));
+function contains(array, value) { for (let i = 0; i < array.length; i++) { if (equals(array[i], value)) { return true; } } return false; }

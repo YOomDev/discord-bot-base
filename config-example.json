@@ -1,5 +1,8 @@
 {
   "token": "token-goes-here",
   "clientId": "application-id-goes-here",
-  "guildId": "guild-id-goes-here"
+  "guildId": "guild-id-goes-here",
+  "commandFolders": [
+    "../commands"
+  ]
 }

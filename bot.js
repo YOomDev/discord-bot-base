@@ -124,7 +124,7 @@ function registerCommands() {
     for (const folder of folders) {
         const commandFiles = fs.readdirSync(folder).filter(file => file.endsWith('.js'));
         for (const file of commandFiles) {
-            const filePath = path.join(foldersPath, file);
+            const filePath = path.join(folder, file);
             const command = require(filePath);
 
             // Check if command has all the needed properties

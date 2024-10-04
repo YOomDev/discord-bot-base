@@ -1,6 +1,6 @@
 // Bot file
 const commandProperties = ["data", "execute"];
-const { token, clientId, guildId, commandFolders }  = require('./config-example.json');
+const { token, clientId, guildId, commandFolders }  = require('./config.json');
 
 export async function start(cmdProperties = []) {
     for (const properties of cmdProperties) { if (!contains(commandProperties, properties)) { commandProperties.push(properties); } }

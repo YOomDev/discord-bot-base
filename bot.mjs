@@ -1,10 +1,13 @@
+import fs from 'fs';
+const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
+
 // Bot file
 const commandProperties = ["data", "execute"];
-const { token, clientId, guildId, commandFolders }  = require('./config.json');
+const config = loadJSON('./config.json');
 
 export async function start(cmdProperties = []) {
     for (const properties of cmdProperties) { if (!contains(commandProperties, properties)) { commandProperties.push(properties); } }
-    client.login(token).catch(err => logError(err));
+    client.login(config.token).catch(err => logError(err));
     reload();
 }
 
@@ -53,12 +56,12 @@ function resolveRequest(id, data) {
 // Discord bot //
 /////////////////
 
-const fs = require('node:fs');
-const path = require('node:path');
-const { REST, Routes, Client, Collection, Events, GatewayIntentBits, EmbedBuilder, ActivityType } = require('discord.js');
+// const fs = require('node:fs');
+import path from 'node:path';
+import { REST, Routes, Client, Collection, Events, GatewayIntentBits, EmbedBuilder, ActivityType } from 'discord.js';
 
 // client
-const rest = new REST().setToken(token);
+const rest = new REST().setToken(config.token);
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 client.commands = new Collection();
 
@@ -114,18 +117,17 @@ client.utils.resolver = {
     getSolvedRequest: getSolvedRequest
 };
 
-function registerCommands() {
+async function registerCommands() {
     logInfo("Started loading commands.");
     client.commands.clear();
     const commands = [];
-
-    const folders = ["./commands"];
-    for (const folder of commandFolders) { folders.push(folder); }
+    const folders = ["./commands", "./discord-bot-base/commands"];
+    // for (const folder of config.commandFolders) { folders.push(folder); }
     for (const folder of folders) {
-        const commandFiles = fs.readdirSync(folder).filter(file => file.endsWith('.js'));
+        const commandFiles = fs.readdirSync(folder).filter(file => file.endsWith('.mjs'));
         for (const file of commandFiles) {
-            const filePath = path.join(folder, file);
-            const command = require(filePath);
+            const filePath = "..\\" + path.join(folder, file);
+            let command = (await import(new URL(filePath, import.meta.url)).catch(err => logError(err)).then(_ => { return _; })).default;
 
             // Check if command has all the needed properties
             let failed = false;
@@ -138,6 +140,7 @@ function registerCommands() {
             if (failed) { continue; } // Skip
 
             // Set a new item in the Collection with the key as the command name and the value as the exported module
+            logInfo(`Loaded command '${command.data.name}'`);
             client.commands.set(command.data.name, command);
             commands.push(command.data.toJSON());
         }
@@ -151,7 +154,7 @@ async function uploadDiscordCommands(commands) {
 
         // The put method is used to fully refresh all commands in the guild with the current set
         const data = await rest.put(
-            Routes.applicationGuildCommands(clientId, guildId),
+            Routes.applicationGuildCommands(config.clientId, config.guildId),
             { body: commands },
         );
 

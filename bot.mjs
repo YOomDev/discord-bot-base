@@ -1,6 +1,8 @@
 import fs from 'fs';
 const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
 
+import { logError, logWarning, logInfo, sleep, contains } from "./utils.mjs";
+
 // Bot file
 const commandProperties = ["data", "execute"];
 const config = loadJSON('./config.json');
@@ -105,12 +107,6 @@ client.utils.buildEmbed = (title, message, fields = [], color = client.utils.col
 
     return embed;
 };
-client.utils.loggers = {
-    err : (err) => { logError   (err); },
-    warn: (msg) => { logWarning (msg); },
-    log : (msg) => { logInfo    (msg); },
-    data: (dat) => { logData    (dat); },
-};
 client.utils.resolver = {
     createRequest: createRequest,
     resolveRequest: resolveRequest,
@@ -162,25 +158,3 @@ async function uploadDiscordCommands(commands) {
     }
     catch (error) { logError(error); }
 }
-
-///////////
-// Utils //
-///////////
-
-function getTimeString(date = new Date()) { return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.toLocaleTimeString()}`.toString(); }
-
-// Log functions
-function logError(err)   { console.error(`[${getTimeString()}] ERROR:\t`, err ); }
-function logWarning(err) { console.error(`[${getTimeString()}] Warning:`, err ); }
-function logInfo(info)   { console.log  (`[${getTimeString()}] Info:\t` , info); }
-function logData(data)   { console.log  (data); }
-async function sleep(seconds) { return new Promise(resolve => setTimeout(resolve, Math.max(seconds, 0) * 1000)); }
-
-function equals(first, second) {
-    switch (first) {
-        case second: return true;
-        default: return false;
-    }
-}
-
-function contains(array, value) { for (let i = 0; i < array.length; i++) { if (equals(array[i], value)) { return true; } } return false; }

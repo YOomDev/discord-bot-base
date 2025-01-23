@@ -25,7 +25,7 @@ import { REST, Routes, Client, Collection, Events, GatewayIntentBits, EmbedBuild
 
 // client
 const rest = new REST().setToken(config.token);
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 client.commands = new Collection();
 
 client.once(Events.ClientReady, readyClient => { logInfo(`Discord bot is ready! Logged in as ${readyClient.user.tag}`); clientDiscord.user.setPresence({ activities: [{ name: `chat for /help`, type: ActivityType.Watching }], status: "" }); });

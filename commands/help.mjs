@@ -6,7 +6,7 @@ export default {
         .setDescription('Shows a list of all the bot commands and their descriptions.'),
     async execute(interaction) {
         const fields = [];
-        for (const command in interaction.client.commands) { fields.push(interaction.client.utils.createField(command.data.name, command.data.description)); }
+        interaction.client.commands.forEach(command => { fields.push(interaction.client.utils.createField(command.data.name, command.data.description, true)); });
         await interaction.reply({ ephemeral: true, embeds: [interaction.client.utils.buildEmbed("Commands", "A list of all the possible commands for this bot:", fields)] });
     },
 }

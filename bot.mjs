@@ -63,9 +63,8 @@ client.utils.buildEmbed = (title, message, fields = [], color = client.utils.col
     if (!title || !message) { logError("Tried sending a discord message without specifying the required arguments!"); return; }
     const embed = new EmbedBuilder().setTitle(title).setColor(color).setDescription(message);
 
-    // Fields
-    for (const field in fields) { embed.addFields({ name: fields[i].name, value: fields[i][1], inline: fields[i][2] }) }
-
+    // Add the fields to the embed
+    for (let i = 0; i < fields.length; i++) { embed.addFields({ name: fields[i].name, value: fields[i].message, inline: fields[i].inline }); }
     return embed;
 };
 

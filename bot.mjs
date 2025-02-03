@@ -28,7 +28,7 @@ const rest = new REST().setToken(config.token);
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 client.commands = new Collection();
 
-client.once(Events.ClientReady, readyClient => { logInfo(`Discord bot is ready! Logged in as ${readyClient.user.tag}`); clientDiscord.user.setPresence({ activities: [{ name: `chat for /help`, type: ActivityType.Watching }], status: "" }); });
+client.once(Events.ClientReady, readyClient => { logInfo(`Discord bot is ready! Logged in as ${readyClient.user.tag}`); client.user.setPresence({ activities: [{ name: `chat for /help`, type: ActivityType.Watching }], status: "" }); });
 
 client.on(Events.MessageCreate, async message => {
     if (message.author.id === client.user.id) { return; }

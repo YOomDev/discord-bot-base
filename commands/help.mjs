@@ -1,4 +1,4 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, MessageFlags } from 'discord.js';
 
 export default {
     data: new SlashCommandBuilder()
@@ -7,6 +7,6 @@ export default {
     async execute(interaction) {
         const fields = [];
         interaction.client.commands.forEach(command => { fields.push(interaction.client.utils.createField(command.data.name, command.data.description, true)); });
-        await interaction.reply({ ephemeral: true, embeds: [interaction.client.utils.buildEmbed("Commands", "A list of all the possible commands for this bot:", fields)] });
+        await interaction.reply({ flags: MessageFlags.Ephemeral, embeds: [interaction.client.utils.buildEmbed("Commands", "A list of all the possible commands for this bot:", fields)] });
     },
 }

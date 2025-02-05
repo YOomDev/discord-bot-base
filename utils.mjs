@@ -1,0 +1,56 @@
+export function getTimeString(date = new Date()) { return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.toLocaleTimeString()}`.toString(); }
+
+// Log functions
+export function logError(err)   { console.error(`[${getTimeString()}] ERROR:\t`, err ); }
+export function logWarning(err) { console.error(`[${getTimeString()}] Warning:`, err ); }
+export function logInfo(info)   { console.log  (`[${getTimeString()}] Info:\t` , info); }
+export function logData(data)   { console.log  (data); }
+export async function sleep(seconds) { return new Promise(resolve => setTimeout(resolve, Math.max(seconds, 0) * 1000)); }
+
+export function equals(first, second) {
+    switch (first) {
+        case second: return true;
+        default: return false;
+    }
+}
+
+export function contains(array, value) { for (let i = 0; i < array.length; i++) { if (equals(array[i], value)) { return true; } } return false; }
+
+//////////////
+// Resolver //
+//////////////
+
+let lastRequestId = -1;
+const requests = [];
+
+export function createRequest() {
+    lastRequestId += 1;
+    const id = lastRequestId;
+    requests.push({ id: id, resolved: false, data: 0 });
+    return id;
+}
+
+export async function getSolvedRequest(id){
+    for (let i = 0; i < requests.length; i++) {
+        if (requests[i].id !== id) { continue; }
+        while (true) {
+            await sleep(0.5);
+            if (requests[i].resolved) {
+                const returnData = requests[i].data;
+                requests.splice(i, 1);
+                return returnData;
+            }
+        }
+    }
+    return 0;
+}
+
+export function resolveRequest(id, data) {
+    for (let i = 0; i < requests.length; i++) {
+        if (requests[i].id === id) {
+            requests[i].data = data;
+            requests[i].resolved = true;
+            return;
+        }
+    }
+}

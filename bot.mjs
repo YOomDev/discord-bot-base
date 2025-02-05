@@ -1,7 +1,7 @@
 import fs from 'fs';
 const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
 
-import { logError, logWarning, logInfo, sleep, contains } from "./utils.mjs";
+import {logError, logWarning, logInfo, sleep, contains, logData} from "./utils.mjs";
 
 // Bot file
 const commandProperties = ["data", "execute"];
@@ -11,6 +11,7 @@ export async function start(cmdProperties = []) {
     for (const properties of cmdProperties) { if (!contains(commandProperties, properties)) { commandProperties.push(properties); } }
     client.login(config.token).catch(err => logError(err));
     reload();
+    return client;
 }
 
 function reload() { registerCommands(); }
@@ -27,6 +28,7 @@ import { REST, Routes, Client, Collection, Events, GatewayIntentBits, EmbedBuild
 const rest = new REST().setToken(config.token);
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 client.commands = new Collection();
+client.global = {};
 
 client.once(Events.ClientReady, readyClient => { logInfo(`Discord bot is ready! Logged in as ${readyClient.user.tag}`); client.user.setPresence({ activities: [{ name: `chat for /help`, type: ActivityType.Watching }], status: "" }); });
 

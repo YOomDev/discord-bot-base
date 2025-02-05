@@ -21,7 +21,7 @@ function reload() { registerCommands(); }
 
 // const fs = require('node:fs');
 import path from 'node:path';
-import { REST, Routes, Client, Collection, Events, GatewayIntentBits, EmbedBuilder, ActivityType } from 'discord.js';
+import { REST, Routes, Client, Collection, Events, GatewayIntentBits, EmbedBuilder, ActivityType, MessageFlags } from 'discord.js';
 
 // client
 const rest = new REST().setToken(config.token);
@@ -49,8 +49,8 @@ client.on(Events.InteractionCreate, async interaction => {
     try { await command.execute(interaction); }
     catch (error) {
         logError(error);
-        if (interaction.replied || interaction.deferred) { await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true }); }
-        else { await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true }); }
+        if (interaction.replied || interaction.deferred) { await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral }); }
+        else { await interaction.reply({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral }); }
     }
 });
 

@@ -1,7 +1,7 @@
 import fs from 'fs';
 const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
 
-import {logError, logWarning, logInfo, sleep, contains, logData} from "./utils.mjs";
+import { logError, logWarning, logInfo, contains } from "./utils.mjs";
 
 // Bot file
 const commandProperties = ["data", "execute"];

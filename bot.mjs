@@ -5,7 +5,7 @@ import { logError, logWarning, logInfo, contains } from "./utils.mjs";
 
 // Bot file
 const commandProperties = ["data", "execute"];
-const config = loadJSON('./config.json');
+const config = loadJSON('.\\config.json');
 
 export async function start(cmdProperties = []) {
     for (const properties of cmdProperties) { if (!contains(commandProperties, properties)) { commandProperties.push(properties); } }
@@ -74,7 +74,7 @@ async function registerCommands() {
     logInfo("Started loading commands.");
     client.commands.clear();
     const commands = [];
-    const folders = ["./commands", "./discord-bot-base/commands"];
+    const folders = [".\\commands", ".\\discord-bot-base\\commands"];
     // for (const folder of config.commandFolders) { folders.push(folder); }
     for (const folder of folders) {
         const commandFiles = fs.readdirSync(folder).filter(file => file.endsWith('.mjs'));

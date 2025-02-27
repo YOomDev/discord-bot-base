@@ -1,7 +1,7 @@
 import fs from 'fs';
 const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
 
-import { logError, logWarning, logInfo, contains } from "./utils.mjs";
+import { logError, logWarning, logInfo, contains, logData } from "./utils.mjs";
 
 // Bot file
 const commandProperties = ["data", "execute"];
@@ -58,6 +58,10 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Make logging functions available for all the commands in other folders
 client.utils = {};
+client.utils.log = logInfo;
+client.utils.logWarn = logWarning;
+client.utils.logErr = logError;
+client.utils.data = logData;
 client.utils.color = "#FFFFFF";
 client.utils.color_error = "#FF3333";
 client.utils.createField = (name = "no title specified", message = "No message specified", inline = false) => { return { name: name, message: message, inline: inline}; };

@@ -58,6 +58,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Make logging functions available for all the commands in other folders
 client.utils = {};
+client.utils.startTime = new Date().getTime();
 client.utils.log = logInfo;
 client.utils.logWarn = logWarning;
 client.utils.logErr = logError;

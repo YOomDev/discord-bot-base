@@ -1,7 +1,7 @@
 import ollama from 'ollama'
 import {logData} from "./utils.mjs";
 
-export const MODEL = 'llama3.2';
+export const MODEL = 'gemma3:1b';
 export const ROLES = {
     SYSTEM: 'system',
     USER:   'user',

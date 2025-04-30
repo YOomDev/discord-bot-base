@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@stable-canvas/comfyui-client": "^1.4.1",
     "discord.js": "^14.17.3",
     "ollama": "^0.5.9"
   }

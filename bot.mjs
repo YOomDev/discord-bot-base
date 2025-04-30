@@ -1,7 +1,6 @@
 import fs from 'fs';
-const loadJSON = (path) => JSON.parse(fs.readFileSync(new URL(path, import.meta.url)));
 
-import { logError, logWarning, logInfo, contains, logData } from "./utils.mjs";
+import { logError, logWarning, logInfo, contains, logData, loadJSON } from "./utils.mjs";
 
 // Bot file
 const commandProperties = ["data", "execute"];
@@ -20,7 +19,6 @@ function reload() { registerCommands(); }
 // Discord bot //
 /////////////////
 
-// const fs = require('node:fs');
 import path from 'node:path';
 import { REST, Routes, Client, Collection, Events, GatewayIntentBits, EmbedBuilder, ActivityType, MessageFlags } from 'discord.js';
 

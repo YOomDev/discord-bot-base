@@ -1,3 +1,5 @@
+import fs from "node:fs";
+
 export function getTimeString(date = new Date()) { return `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${date.toLocaleTimeString()}`.toString(); }
 
 // Log functions
@@ -15,3 +17,6 @@ export function equals(first, second) {
 }
 
 export function contains(array, value) { for (let i = 0; i < array.length; i++) { if (equals(array[i], value)) { return true; } } return false; }
+
+export function loadJSON(path) { return JSON.parse(fs.readFileSync(new URL(path, import.meta.url))); }
+export function saveJSON(path, data) { fs.writeFileSync(new URL(path, import.meta.url), JSON.stringify(data, null, 2)); }

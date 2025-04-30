@@ -1,4 +1,4 @@
-export function getTimeString(date = new Date()) { return `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.toLocaleTimeString()}`.toString(); }
+export function getTimeString(date = new Date()) { return `${date.getDate()}-${date.getMonth()+1}-${date.getFullYear()} ${date.toLocaleTimeString()}`.toString(); }
 
 // Log functions
 export function logError(err)   { console.error(`[${getTimeString()}] Discord ERROR:\t`, err ); }
